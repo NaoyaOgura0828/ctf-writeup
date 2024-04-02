@@ -67,7 +67,7 @@ disconnectするまでは不変。
 ```
 
 > [!IMPORTANT]
-> `encrypted_key_candidates`は暗号化されたキー候補であり正しいキーではない。
+> `encrypted_key_candidates`は暗号化されたキー候補であり正しいキーではない。<br>
 > この後のプロセスにより正しいキーを特定する。
 
 5. 14バイトの0と2バイトのすべての可能な値の組み合わせ(256 * 256 = 65536)でキーのブルートフォース候補リストを生成する。
@@ -92,8 +92,8 @@ disconnectするまでは不変。
 ```
 
 > [!TIP]
-> 入力したキーが正しくない場合、`'msg': 'Incorrect pin. Bye.\n'`の出力によりdisconnectしてしまうが、
-> 暗号の復号化は45000回の回数制限の中でconnectionが維持される。
+> 入力したキーが正しくない場合、`'msg': 'Incorrect pin. Bye.\n'`の出力によりdisconnectしてしまうが、<br>
+> 暗号の復号化は45000回の回数制限の中でconnectionが維持される。<br>
 > connectionが維持されていれば`pin`は不変である為、復号化をブルートフォースする事で正しいキーを取得する事が可能であると理解している。
 
 出典: [elliptic-shiho/solve.py](https://gist.github.com/elliptic-shiho/67778c6447c54d8be8ff066746461bbc)
