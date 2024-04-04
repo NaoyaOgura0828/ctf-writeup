@@ -1,0 +1,15 @@
+version: "2"
+services:
+  freeswitch:
+    hostname: freeswitch
+    network_mode: "host"
+    container_name: freeswitch
+    restart: always
+    image: voip-mistake-freeswitch
+    logging:
+      options:
+        max-size: 50m
+    volumes:
+      - ./conf:/usr/local/freeswitch/conf:ro
+      - ./flag:/flag:ro
+    tty: true

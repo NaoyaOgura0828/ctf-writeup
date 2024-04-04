@@ -1,0 +1,19 @@
+<include>
+  <context name="default">
+    <extension name="ctf">
+      <condition field="destination_number" expression="^31337$">
+        <action application="answer"/>
+        <!-- Prepare your own file XD -->
+        <action application="playback" data="${conf_dir}/31337.mp4"/>
+      </condition>
+    </extension>
+
+    <extension name="ctf2">
+      <condition field="destination_number" expression="^1337$">
+        <action application="answer"/>
+        <!-- Prepare your own file XD -->
+        <action application="playback" data="{loops=10}tone_stream://path=${conf_dir}/${destination_number}.ttml"/>
+      </condition>
+    </extension>
+  </context>
+</include>
