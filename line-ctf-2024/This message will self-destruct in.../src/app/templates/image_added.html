@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="spy-container">
+    <p>You can share this link to your SPY 😎</p>
+    <p>Only SPY who knows Pre-Shared Password can see your message 😎</p>
+    <form class="spy-form">
+        <input id="link-input" value="{{url}}">
+    </form>
+    <button id="copy" onclick="copyUrl()">Copy URL</button>
+</div>
+
+<script>
+    function copyUrl() {
+        copyButton = document.getElementById('copy')
+        linkInput = document.getElementById('link-input')
+        linkInput.select()
+        document.execCommand('copy')
+        copyButton.innerHTML = 'Copied!'
+    }
+</script>
+{% endblock %}

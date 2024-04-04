@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="spy-container">
+    <p>This service can generate message link that will self-destruct 💣</p>
+    <form class="spy-form" id="spy-form" method="post" enctype="multipart/form-data">
+        <fieldset class="input-group">
+            <legend>Image</legend>
+            <div class="input-wrapper">
+                <input type="file" name="image" accept="image/png, image/jpeg">
+                <div class="or-text">OR</div>
+                <input type="text" name="image_url" placeholder="Image URL: http://....jpg or .png">
+            </div>
+            <div class="image-size">Image must be 1MB or less, 500x500px or less</div>
+        </fieldset>
+        <fieldset>
+            <legend>Password</legend>
+            <input type="password" name="password" placeholder="Pre-Shared Password" required>
+        </fieldset>
+        
+        <button id="submit-button" onclick="clickSubmit()">Submit</button>
+    </form>
+
+    {% if form and form.errors %}
+    <div id="errors">
+        {% for _, errors in form.errors.items() %}
+            {% for err in errors%}
+                <p>{{err}}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif%}
+</div>
+
+
+<script>
+    function clickSubmit(){
+        submitButton = document.getElementById('submit-button')
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i>'
+        document.getElementById('spy-form').submit()
+    }
+</script>
+{% endblock %}

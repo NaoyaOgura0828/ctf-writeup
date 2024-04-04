@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.10"
+werkzeug = "2.2.3"
+flask = "2.2.3"
+pillow = "^10.1.0"
+mysql-connector-python = "^8.3.0"
+uwsgi = "^2.0.23"
+flask-wtf = "^1.2.1"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

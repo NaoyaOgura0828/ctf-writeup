@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="spy-container">
+    <form class="spy-form" method="post" enctype="multipart/form-data">
+        <input type="password" name="password" placeholder="Pre-shared password" required>
+        <button id="submit" onclick="submit()">Submit</button>
+    </form>
+    <div id="remaining-seconds">{{ destruction_seconds }}</div>
+</div>
+
+<div class="img-container">
+    <img src="{{ data_url }}">
+</div>
+
+<script>
+    let countdown = setInterval(function(){
+        let remainingSeconds = parseInt(document.getElementById("remaining-seconds").innerHTML);
+        if (remainingSeconds > 0) {
+            document.getElementById("remaining-seconds").innerHTML = remainingSeconds - 1;
+        } else {
+            clearInterval(countdown);
+            alert('BOOOOOOM 💣')
+            window.location.href = "/";
+        }
+    }, 1000);
+</script>
+{% endblock %}

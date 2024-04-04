@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                background-color: #2b2b2b;
+                color: #fff;
+                font-family: 'Helvetica', 'Arial', sans-serif;
+                margin: 0;
+            }
+            p {
+                margin: 0;
+            }
+            .spy-form-title a {
+                color: #fff;
+                text-decoration: none;
+            }
+            .spy-form-title a:hover {
+                color: #ccc;
+            }
+            .spy-container {
+                max-width: 700px;
+                min-height: 150px;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .spy-form-title {
+                text-align: center;
+            }
+            .spy-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                margin-top: 1em;
+            }
+            input, button{
+                margin-bottom: 10px;
+                padding: 10px;
+                border: 0;
+                border-radius: 5px;
+            }
+            .spy-container button {
+                cursor: pointer;
+                background-color: #5D26C1;
+                color: #fff;
+                width: 300px;
+            }
+            .spy-container input {
+                width: 300px;
+            }
+            .spy-container button:hover {
+                background-color: #430086;
+            }
+            .img-container {
+                max-width: 700px;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+            }
+            .footer {
+                width: 100%;
+                flex-shrink: 0;
+                background-color: #00C300;
+                padding-top: 10px;
+                text-align: center;
+                color: #fff;
+                position: fixed;
+                bottom: 0;
+            }
+            .footer-button {
+                background-color: #005700;
+                border: 0;
+                padding: 10px;
+                border-radius: 5px;
+                color: #fff;
+                cursor: pointer;
+                margin-left: 2em;
+                min-width: 100px;
+            }
+            .footer-button:hover{
+                background-color: #013301;
+            }
+            #remaining-seconds {
+                text-align: center;
+                font-size: xx-large;
+            }
+            .input-group {
+                justify-content: space-between;
+                width: 100%;
+                align-items: stretch;
+            }
+            .input-group input {
+                width: 40%;
+            }
+            .or-text {
+                align-self: center;
+            }
+            fieldset {
+                margin: 5px;
+            }
+            fieldset:not(.input-group) {
+                border: none;
+            }
+            #errors {                
+                background-color: #e57373;
+                border: 1px solid #b71c1c;
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 15px;
+                width: 500px;
+                text-align: center;
+                box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .input-wrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .image-size {
+                color: #b71c1c;
+                font-size: 0.8em;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <h2 class="spy-form-title"><a href="/">SPY SECRET FORM</a></h2>
+        {% block body %}
+        {% endblock %}
+        <div class="footer">
+            We have bug-bounty program.  If you can see our message without knowing password, please share us.
+            <button class="footer-button" id="footer-button" onclick="get_and_copy_trial_link()">Get trial link</button>
+        </div>
+
+        <script>
+            function get_and_copy_trial_link(){
+                footerButton = document.getElementById('footer-button')
+                footerButton.disabled = true;
+                footerButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i>'
+                footerButton.focus()
+
+                fetch('/trial')
+                .then(res => {return res.json()})
+                .then(data => {
+                    copyTextInput = document.createElement("input");
+                    copyTextInput.readOnly = true
+                    document.body.appendChild(copyTextInput)
+                    copyTextInput.value = data.url;
+                    copyTextInput.select()
+                    document.execCommand('copy')
+                    document.body.removeChild(copyTextInput)
+                    footerButton.innerHTML = 'Copied!';
+                })
+            }
+        </script>
+    </body>
+</html>
