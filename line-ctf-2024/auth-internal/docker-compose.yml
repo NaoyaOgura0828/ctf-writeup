@@ -1,0 +1,117 @@
+version: "3"
+
+services:
+    nginx:
+        build: ./nginx
+        container_name: nginx
+        restart: always
+        ports:
+            - 10000:80
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.2
+
+    auth:
+        build: ./auth
+        container_name: auth
+        restart: always
+        environment:
+            - INTERNAL_ID=internal
+            - INTERNAL_SECRET=redacted
+            - INTERNAL_DOMAIN=http://172.20.0.20
+            - EXTERNAL_ID=external
+            - EXTERNAL_SECRET=redacted
+            - EXTERNAL_DOMAIN=${EXTERNAL_HOST}
+            - ADMIN_UUID=b85b1eec-d173-4448-9313-6280b72d6df8
+            - ADMIN_USERNAME=redacted
+            - ADMIN_PASSWORD=redacted
+            - ADMIN_URL=http://admin
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.10
+
+    internal:
+        build: ./internal
+        container_name: internal
+        restart: always
+        environment:
+            - CLIENT_ID=internal
+            - CLIENT_SECRET=redacted
+            - INTERNAL_HOST=http://172.20.0.20
+            - INTERNAL_FLAG=${FLAG}
+            - AUTH_TOKEN_URL=http://172.20.0.2/api/v1/token.oauth2
+            - AUTH_USERINFO_URL=http://172.20.0.2/api/v1/userinfo.openid
+            - AUTH_REDIRECT_URL=${AUTH_HOST}/api/v1/authorize.oauth2?client_id=internal&redirect_uri=http://172.20.0.20/api/auth/callback%3fstate=eyJyZWRpcmVjdCI6Ii8ifQ==&response_type=code&scope=all
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.20
+
+    external:
+        build: ./external
+        container_name: external
+        restart: always
+        ports:
+            - 20000:80
+        environment:
+            - CLIENT_ID=external
+            - CLIENT_SECRET=redacted
+            - EXTERNAL_HOST=${EXTERNAL_HOST}
+            - EXTERNAL_FLAG=${FAKE_FLAG}
+            - AUTH_TOKEN_URL=http://172.20.0.2/api/v1/token.oauth2
+            - AUTH_USERINFO_URL=http://172.20.0.2/api/v1/userinfo.openid
+            - AUTH_REDIRECT_URL=${AUTH_HOST}/api/v1/authorize.oauth2?client_id=external&redirect_uri=${EXTERNAL_HOST}/api/auth/callback%3fstate=eyJyZWRpcmVjdCI6Ii8ifQ==&response_type=code&scope=all
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.30
+
+    report:
+        build: ./report
+        container_name: report
+        restart: always
+        ports:
+            - 30000:80
+        environment:
+            - EXTERNAL_HOST=${EXTERNAL_HOST}
+            - INTERNAL_HOST=http://172.20.0.20
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.40
+            separated_network:
+                ipv4_address: 172.30.0.10
+
+    bot:
+        build: ./bot
+        container_name: bot
+        restart: always
+        environment:
+            - AUTH_HOST=http://172.20.0.10
+            - EXTERNAL_HOST=${EXTERNAL_HOST}
+            - INTERNAL_HOST=http://172.20.0.20
+            - ADMIN_USERNAME=redacted
+            - ADMIN_PASSWORD=redacted
+        networks:
+            challenge_network:
+                ipv4_address: 172.20.0.50
+            separated_network:
+                ipv4_address: 172.30.0.20
+
+    redis:
+        build: ./redis
+        restart: always
+        container_name: redis
+        networks:
+            separated_network:
+                ipv4_address: 172.30.0.30
+
+networks:
+    challenge_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.20.0.0/16
+
+    separated_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.30.0.0/16

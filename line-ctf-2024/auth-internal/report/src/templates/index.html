@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Report</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+        <style>
+            body {
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .report-container {
+                max-width: 400px;
+                width: 100%;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .error-message {
+                color: #721c24;
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                padding: 8px 15px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="report-container">
+            <h2 class="text-center mb-4">Report</h2>
+            <div id="report-result"></div>
+            <form id="report-form" action="/" method="POST">
+                <div class="form-group">
+                    <label for="username">External / Internal</label>
+                    <select class="form-control" id="service">
+                        <option value="internal">Internal</option>
+                        <option value="external">External</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="path">Path</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="path"
+                        placeholder="/path"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="url">Report URL</label>
+                    <input type="text" class="form-control" id="url" disabled />
+                </div>
+                <div class="form-group">
+                    <img src="data:image/jpeg;base64,{{captcha}}" />
+                </div>
+                <div class="form-group">
+                    <label for="captcha">Captcha</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="captcha"
+                        placeholder="captcha"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Report
+                </button>
+            </form>
+        </div>
+        <script>
+            const host = {
+                internal: "{{ internal }}",
+                external: "{{ external }}",
+            };
+            let target = "internal";
+            let path = "/";
+            document.getElementById("url").value = host[target] + path;
+            document
+                .getElementById("service")
+                .addEventListener("change", function (event) {
+                    target = event.target.value;
+                    document.getElementById("url").value = host[target] + path;
+                });
+            document
+                .getElementById("path")
+                .addEventListener("keyup", function (event) {
+                    path = event.target.value;
+                    if (path[0] != "/") {
+                        path = "/" + path;
+                    }
+                    document.getElementById("url").value = host[target] + path;
+                });
+            document
+                .getElementById("report-form")
+                .addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const captcha = document.getElementById("captcha").value;
+                    fetch(
+                        `/report?${new URLSearchParams({
+                            captcha: captcha,
+                            path: path,
+                            service: target,
+                        })}`,
+                        {
+                            method: "GET",
+                        }
+                    )
+                        .then((response) => {
+                            if (response.ok) {
+                                alert("reported");
+                                location.reload();
+                            } else {
+                                alert("error");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("error:", error);
+                        });
+                });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple SSO</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .verify-container {
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-top: 10px;
+    }
+    .error-message {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 8px 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <h2 class="text-center mb-4">Simple SSO</h2>
+    <div id="verify-result"></div>
+    <p style="font-size: 12px; display:inline">You are trying to access from external network. Verifier will access to </p><p style="font-size: 12px; display: inline; color: #007bff">{{ .verify_url }}</p><br/><p style="font-size: 12px; display:inline"> The endpoint above must return </p><p style="font-size: 12px; display: inline; color: #007bff">{{ .verify_code }}</p><p style="font-size: 12px; display: inline"> to verify the login.</p>
+    <form id="verify-form" action="/" method="POST">
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Verify</button>
+      </div>
+    </form>
+  </div>
+</body>
+  <script>
+    document.getElementById('verify-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    fetch('/api/v1/verify', {
+      method: 'GET',
+      redirect: 'manual'
+    })
+    .then(response => {
+      console.log(response.url)
+      if (response.status !== 400) {
+        window.location.href = response.url;
+      } else {
+        return response.json()
+      }
+    })
+    .then((response) => {
+        if (response) {
+            const result = document.getElementById('verify-result')
+            result.classList.add('error-message')
+            result.innerHTML = (response.error_description.length >= 78) ? response.error_description.substr(0, 78) + "..." : response.error_description.substr(0, 70) + "..."
+        } else {
+            console.log(1)
+        }
+    })
+    .catch(error => {
+      console.error('error:', error);
+    });
+  });
+  </script>
+</html>
