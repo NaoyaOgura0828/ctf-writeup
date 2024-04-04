@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  heritage-gw:
+    build:
+      context: ./heritage-gw
+      dockerfile: Dockerfile.Heritage-gw
+    ports:
+      - "20080:20080"
+    networks:
+      - heritage-service
+
+  heritage-app:
+    build:
+      context: ./heritage-app
+      dockerfile: Dockerfile.Heritage-app
+    networks:
+      - heritage-service
+
+networks:
+  heritage-service:
+    driver: bridge

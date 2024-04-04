@@ -1,0 +1,9 @@
+FROM amazoncorretto:11
+
+WORKDIR /app
+
+COPY Heritage-app.jar app.jar
+COPY FLAG /FLAG
+CMD ["java", "-jar", "app.jar"]
+
+EXPOSE 8080

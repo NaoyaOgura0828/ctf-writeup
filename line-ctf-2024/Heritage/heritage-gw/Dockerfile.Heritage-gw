@@ -1,0 +1,8 @@
+FROM amazoncorretto:11
+
+WORKDIR /app
+
+COPY Heritage-gw.jar gw.jar
+CMD ["java", "-jar", "gw.jar"]
+
+EXPOSE 20080
