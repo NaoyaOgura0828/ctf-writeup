@@ -97,3 +97,42 @@ disconnectするまでは不変。
 > connectionが維持されていれば`pin`は不変である為、復号化をブルートフォースする事で正しいキーを取得する事が可能であると理解している。
 
 出典: [elliptic-shiho/solve.py](https://gist.github.com/elliptic-shiho/67778c6447c54d8be8ff066746461bbc)
+
+<br>
+
+## zipviewer-version-citizen
+Webサイトが実行されている。<br>
+zipファイルをuploadすると解凍されたファイルをDownloadする事ができる。<br>
+flagは`/flag`に存在しており、symbolic linkをzip化する事でflagを取得可能であると推察した。<br>
+しかし、symbolic linkのチェックが実装されており、解凍したファイルがsymbolic linkである場合、削除される。
+
+<br>
+
+回避方法は大量にuploadとDownloadを繰り返し、symbolic linkが削除される前にダウンロードする。
+
+<br>
+
+> [!IMPORTANT]
+> 出典元のwriteupでは[solve.py](./zipviewer-version-citizen/solve.py)を実行するのみでflag取得に至ったようだが、<br>
+> ローカル環境ではさらに負荷を掛ける必要があったため、[run.sh](./zipviewer-version-citizen/run.sh)を作成した。<br>
+> また、zipファイルを作成するのが煩わしかったので、[solve.py](./zipviewer-version-citizen/solve.py)にzipファイル作成methodを追加した。
+
+成功すると、カレントディレクトリに生成される`exec.log`にflagが出力される。
+
+```
+updating: symlink.txt (stored 0%)
+Archive:  tmp.zip
+    testing: symlink.txt              OK
+No errors detected in compressed data of tmp.zip.
+updating: symlink.txt (stored 0%)
+Archive:  tmp.zip
+    testing: symlink.txt              OK
+No errors detected in compressed data of tmp.zip.
+updating: symlink.txt (stored 0%)
+Archive:  tmp.zip
+    testing: symlink.txt              OK
+No errors detected in compressed data of tmp.zip.
+LINECTF{redacted}
+```
+
+出典: [4n86rakam1/index.md](https://github.com/4n86rakam1/writeup/blob/main/LINE_CTF_2024/Web/zipviewer-version-citizen/index.md)
