@@ -1,0 +1,16 @@
+<%- include('header.ejs') %>
+<body class="d-flex flex-column">
+    <div id="page-content">
+        <script>
+            window.onload = () => {
+                let cookieObj = Object.fromEntries(document.cookie.split('; ').map(x => x.split('=')));
+                document.getElementById('noteUrl').setAttribute('href', '/read/' + cookieObj.noteId);
+            }
+        </script>
+        <div class="container pt-5">
+            <div class="alert alert-success" role="alert">
+                Write note successfully. You can read your note <a href="#" id="noteUrl">here</a>
+            </div>
+        </div>
+    </div>
+</body>

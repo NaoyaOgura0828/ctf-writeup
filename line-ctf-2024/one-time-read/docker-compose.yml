@@ -1,0 +1,51 @@
+version: "3"
+services:
+  web:
+    container_name: one_time_read_web
+    build:
+      context: ./web
+    environment:
+      - DOMAIN_SUFFIX=${DOMAIN_SUFFIX}
+      - BUSSINESS_NAME=${BUSINESS_NAME}
+      - BOT_NAME=${BOT_NAME}
+    networks:
+      - one_time_read_network
+  
+  bot:
+    container_name: one_time_read_bot
+    build:
+      context: ./bot
+    environment:
+      - DOMAIN_SUFFIX=${DOMAIN_SUFFIX}
+      - BUSINESS_NAME=${BUSINESS_NAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - ./bot/logs:/logs/bot/
+    ports:
+      - 80:80
+    networks:
+      - one_time_read_network
+
+  redis:
+    container_name: one_time_read_redis
+    image: redis:latest
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    networks:
+      - one_time_read_network
+
+  puppeteer:
+    container_name: one_time_read_puppeteer
+    build:
+      context: ./puppeteer
+    environment:
+      - DOMAIN_SUFFIX=${DOMAIN_SUFFIX}
+      - BUSINESS_NAME=${BUSINESS_NAME}
+      - FLAG=${FLAG}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - one_time_read_network
+  
+networks:
+  one_time_read_network:
+    external: true
+    name: one_time_read_network

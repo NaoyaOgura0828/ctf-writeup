@@ -1,0 +1,22 @@
+<%- include('header.ejs') %>
+<body class="d-flex flex-column">
+    <div id="page-content">
+        <div class="container pt-5">
+            <h3>Write a One-Time-Read Note</h3>
+            <form method="POST" action="/write">
+                <div class="mb-3">
+                    <label for="passCode" class="form-label">Passcode</label>
+                    <input type="text" class="form-control" id="passCode" name="passCode" placeholder="Passcode to read your note">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" placeholder="Note content"></textarea>
+                </div>
+                <input type="text" name="csrfToken" value="<%=csrfToken%>" hidden>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Write note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
