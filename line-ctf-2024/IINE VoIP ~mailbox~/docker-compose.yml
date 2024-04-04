@@ -1,0 +1,33 @@
+version: "2"
+services:
+  freeswitch:
+    hostname: freeswitch
+    container_name: freeswitch
+    restart: always
+    image: voip-mailbox-freeswitch
+    build:
+      context: .
+      dockerfile: Dockerfile.freeswitch
+    logging:
+      options:
+        max-size: 50m
+    volumes:
+      - ./conf:/usr/local/freeswitch/conf:ro
+      - ./flag:/flag:ro
+    ports:
+      - 10002:5060
+    tty: true
+  login:
+    hostname: login
+    container_name: login
+    restart: always
+    image: voip-mailbox-login
+    build:
+      context: .
+      dockerfile: Dockerfile.login
+    logging:
+      options:
+        max-size: 50m
+    ports:
+      - 10030:10030
+    tty: true
